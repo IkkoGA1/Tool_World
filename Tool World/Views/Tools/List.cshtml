@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Tool_World.Models.Tool>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Tools</h2>
+<p>
+    @Html.ActionLink("New Tool", "New", "Tools", null, new { @class = "btn btn-primary" })
+</p>
+
+
+
+    <table id="tools" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Tool</th>
+                <th>Manufacturer</th>
+                <th>Tool Type</th>
+                <th>Tool Drive Size</th>
+                <th>Number In Stock</th>
+                <th>Available for Rent</th>
+                <th>Tool Edit/Model Name</th>
+                <th>Delete</th>
+
+            </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+    </table>
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            var table = $("#tools").DataTable({
+                ajax: {
+                    url: "/api/tools",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "urlPicLink",
+                        render: function(data, type, tool) {
+                            return "<img src=" + tool.urlPicLink + '"alt="" + width = "75"+ height = "75"' + "'>";
+                        }
+                    },
+
+                    {
+                        data: "manufacturer.manufacturerName"
+                    },
+
+                    {
+                        data: "toolCategory.toolType"
+                    },
+
+                    {
+                        data: "toolDriveSize.drive"
+                    },
+
+                    {
+                        data: "numberInStock",
+                        render: function(data, type, tool) {
+                            return tool.numberInStock;
+                        }
+                    },
+                    {
+                        data: "numberAvailable",
+                        render: function (data, type, tool) {
+                            return tool.numberAvailable;
+                        }
+                    },
+                    {
+                        data: "modelName",
+                        render: function(data, type, tool) {
+                            return "<a href='/tools/edit/" + tool.id + "'>" + tool.modelName + "</a>";
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data) {
+                            return "<button class='btn-link js-delete' data-tool-id=" + data + ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#tools").on("click",
+                ".js-delete",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Delete this tool? This action can't be undone.",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/tools/" + button.attr("data-tool-id"),
+                                    method: "DELETE",
+                                    success: function () {
+                                        table.row(button.parent("tr")).remove().draw();
+                                    }
+                                });
+                            }
+                        });
+                });
+        });
+    </script>
+}

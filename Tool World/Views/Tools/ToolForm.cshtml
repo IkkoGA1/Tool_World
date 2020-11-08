@@ -1,0 +1,59 @@
+﻿
+@model Tool_World.ViewModels.ToolFormViewModel
+@{
+    ViewBag.Title = "New";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New Tool</h2>
+
+@using (Html.BeginForm("Save", "Tools"))
+{
+    @Html.ValidationSummary(true, "Please fix the following errors.")
+    <div class="form-group">
+        @Html.LabelFor(m => m.ModelName)
+        @Html.TextBoxFor(m => m.ModelName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ModelName)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ToolCategoryId)
+        @Html.DropDownListFor(m => m.ToolCategoryId, new SelectList(Model.ToolCategories, "Id", "ToolType"), "Select Category", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ToolCategoryId)
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ToolDriveSizeId)
+        @Html.DropDownListFor(m => m.ToolDriveSizeId, new SelectList(Model.ToolDriveSizes, "Id", "Drive"), "Select Drive Size", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ToolDriveSizeId)
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ManufacturerId)
+        @Html.DropDownListFor(m => m.ManufacturerId, new SelectList(Model.Manufacturers, "Id", "ManufacturerName"), "Select Manufacturer", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ManufacturerId)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.UrlPicLink)
+        @Html.TextBoxFor(m => m.UrlPicLink, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.UrlPicLink)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.NumberInStock)
+        @Html.TextBoxFor(m => m.NumberInStock, new {@class = "form-control"})
+        @Html.ValidationMessageFor(m => m.NumberInStock)
+    </div>
+
+    @Html.HiddenFor(m => m.Id);
+    @Html.AntiForgeryToken()
+    <button class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

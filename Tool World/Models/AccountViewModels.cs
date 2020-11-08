@@ -8,6 +8,14 @@ namespace Tool_World.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Driver's License")]
+        public string DrivingLicense { get; set; }
+
+        [Required]
+        [Phone]
+        public string Phone { get; set; }
     }
 
     public class ExternalLoginListViewModel
@@ -79,6 +87,15 @@ namespace Tool_World.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(255)]
+        [Display(Name = "Drivers License")]
+        public string DrivingLicense { get; set; }
+
+        [Required]
+        [Phone]
+        public string Phone { get; set; }
     }
 
     public class ResetPasswordViewModel

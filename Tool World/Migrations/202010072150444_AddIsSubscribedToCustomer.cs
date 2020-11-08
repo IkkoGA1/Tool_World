@@ -1,0 +1,18 @@
+namespace Tool_World.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class AddIsSubscribedToCustomer : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn("dbo.Customers", "IsSubscribedToNotifications", c => c.Boolean(nullable: false));
+        }
+        
+        public override void Down()
+        {
+            DropColumn("dbo.Customers", "IsSubscribedToNotifications");
+        }
+    }
+}

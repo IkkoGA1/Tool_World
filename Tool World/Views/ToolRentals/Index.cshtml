@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Tool_World.Models.Rental>
+@{
+    ViewBag.Title = "Index";
+
+}
+
+@if (User.IsInRole("CanManageRentals"))
+{
+    <h2>Customer Rentals</h2>
+}
+
+@if (User.IsInRole("CanManageTools"))
+{
+    <h2>Customer Rental History</h2>
+}
+
+
+<table id="rentals" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Tool</th>
+            <th>Customer</th>
+            <th>Date Rented</th>
+            <th>Tool Model</th>
+            <th>Date Returned</th>
+            <th>Active Rental</th>
+            <th>Return</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#rentals").DataTable({
+                ajax: {
+                    url: "/api/toolRentals",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "urlPicLink",
+                        render: function (data, type, rental) {
+                            return "<img src=" + rental.tool.urlPicLink + '"alt="" + width = "75"+ height = "75"' + "'>";
+                        }
+                    },
+                    {
+                        data: "customer.name"
+
+                    },
+                    {
+                        data: "dateRented",
+                        render: function (data) {
+                            var date = new Date(data);
+                            var month = date.getMonth() + 1;
+                            return (month.toString().length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                        }
+                    },
+                    {
+                        data: "tool.modelName"
+                    },
+                    {
+                        data: "dateReturned",
+                        defaultContent: "Not Returned Yet",
+                        render: function (data, type, rental) {
+                            if (data == null) {
+                                return '';
+                            } else {
+                                var date = new Date(data);
+                                var month = date.getMonth() + 1;
+                                return (month.toString().length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+                            }
+
+                        }
+                    },
+                    {
+                        data: "isRentalActive"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            return "<button class='btn-link js-put' data-rental-id=" + data + ">Return Rental</button>";
+                        }
+                    }
+                ]
+
+            });
+
+            $("#rentals").on("click",
+                ".js-put",
+                function () {
+                    var button = $(this);
+                    bootbox.confirm("Return Rental? This action can't be undone.",
+                        function (result) {
+                            if (result) {
+                                $.ajax({
+                                    url: "/api/toolRentals/" + button.attr("data-rental-id"),
+                                    method: "PUT",
+                                    success: function () {
+                                        table.row(button.parent("tr"));
+                                    }
+                                });
+                                location.reload();
+                            }
+                        });
+                });
+        });
+    </script>
+}

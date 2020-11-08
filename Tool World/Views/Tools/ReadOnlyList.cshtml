@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Tool_World.Models.Tool>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Tools</h2>
+
+
+<table id="tools" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Tool</th>
+            <th>Manufacturer</th>
+            <th>Tool Model </th>
+            <th>Tool Type</th>
+            <th>Tool Drive Size</th>
+            <th>Number In Stock</th>
+           
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#tools").DataTable({
+                ajax: {
+                    url: "/api/tools",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "urlPicLink",
+                        render: function (data, type, tool) {
+                            return "<img src=" + tool.urlPicLink + '"alt="" + width = "150"+ height = "150"' + "'>";
+                        }
+                    },
+
+                    {
+                        data: "manufacturer.manufacturerName"
+                    },
+
+                    {
+                        data: "modelName"
+
+                    },
+
+                    {
+                        data: "toolCategory.toolType"
+                    },
+
+                    {
+                        data: "toolDriveSize.drive"
+                    },
+
+                    {
+                        data: "numberInStock",
+                        render: function (data, type, tool) {
+                            return tool.numberInStock;
+                        }
+                    }
+
+                ]
+            });
+        });
+    </script>
+}
