@@ -55,8 +55,8 @@ namespace Tool_World
             //   consumerSecret: "");
 
             app.UseFacebookAuthentication(
-               appId: "367265581187650",
-               appSecret: "1cf1d0b4bc66b40918b00d05b109c53e");
+               appId: "",
+               appSecret: "");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{
